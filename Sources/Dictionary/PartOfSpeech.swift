@@ -13,6 +13,7 @@ public enum PartOfSpeech:CustomStringConvertible{
     case noun
     case adjective
     case adverb
+    case auxiliary
     case prefix
     case symbol
     case unknown
@@ -32,6 +33,8 @@ public enum PartOfSpeech:CustomStringConvertible{
             return "adjective"
         case .adverb:
             return "adverb"
+        case .auxiliary:
+            return "auxiliary"
         case .prefix:
             return "prefix"
         case .symbol:
