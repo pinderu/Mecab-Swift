@@ -357,6 +357,15 @@ final class Mecab_SwiftTests: XCTestCase {
     
     
 
+    /// The past だ in 読んだ: lemma だ, conjugation type 特殊・タ, all nine
+    /// IPADic slots in order.
+    func testFeatureSlots() throws {
+        let tokenizer=try Tokenizer(dictionary: IPADic())
+        let tokens=tokenizer.tokenize(text: "読んだ", transliteration: .katakana)
+        let da=try XCTUnwrap(tokens.first(where: {$0.base == "だ"}))
+        XCTAssertEqual(da.featureSlots, ["助動詞", "*", "*", "*", "特殊・タ", "基本形", "だ", "ダ", "ダ"])
+    }
+
     static var allTests = [
         ("Test Loading", testLoading),
     ]

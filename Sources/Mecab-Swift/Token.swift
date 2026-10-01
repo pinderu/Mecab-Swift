@@ -14,6 +14,9 @@ struct Token{
 
     let surface:String
     let features:[String]
+    /// Every slot of MeCab's feature string, empty ones kept. `features`
+    /// drops them, so "a,,b" reads as two fields there and three here.
+    let featureSlots:[String]
     let partOfSpeech:PartOfSpeech
     let tokenDescription:TokenIndexProviding
 
@@ -21,7 +24,8 @@ struct Token{
         guard let sPTR=node.surface else{return nil}
         let data=Data(bytes: sPTR, count: Int(node.length))
         guard  let surface=String(data: data, encoding: .utf8),
-                let features=String(cString: node.feature, encoding: .utf8)?.split(separator: ","),
+                let feature=String(cString: node.feature, encoding: .utf8),
+                case let features=feature.split(separator: ","),
                 features.count > 0
                 else{
             return nil
@@ -29,6 +33,7 @@ struct Token{
        
         self.surface=surface
         self.features=features.map({String($0)})
+        self.featureSlots=feature.split(separator: ",", omittingEmptySubsequences: false).map({String($0)})
         self.partOfSpeech = tokenDescription.partOfSpeech(posID: node.posid)
         self.tokenDescription=tokenDescription
     }

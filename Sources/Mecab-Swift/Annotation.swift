@@ -15,6 +15,7 @@ import Dictionary
  - reading: in case `base` contains Kanji characters, the reading if the characters. The reading is formatted according to `Transliteration`
  - partOfSpeech: A member of the `PartOfSpeech` enum.
  - dictionaryForm: in case of verbs or adjectives, the dictionary form of the token.
+ - featureSlots: the dictionary's feature string split on "," with empty slots kept (IPADic: nine for a known word, seven for an unknown one). Empty for the system tokenizer.
  */
 
 public struct Annotation:Equatable, FuriganaAnnotating{
@@ -24,14 +25,16 @@ public struct Annotation:Equatable, FuriganaAnnotating{
     public let partOfSpeech:PartOfSpeech
     public let range:Range<String.Index>
     public let dictionaryForm:String
+    public let featureSlots:[String]
     let transliteration:Tokenizer.Transliteration
     
     init(token:Token, range:Range<String.Index>, transliteration:Tokenizer.Transliteration) {
-        self.init(base: token.original, reading: token.reading, range: range, dictionaryForm: token.dictionaryForm, transliteration: transliteration, POS: token.partOfSpeech)
+        self.init(base: token.original, reading: token.reading, range: range, dictionaryForm: token.dictionaryForm, transliteration: transliteration, POS: token.partOfSpeech, featureSlots: token.featureSlots)
     }
     
-    init(base:String, reading:String, range:Range<String.Index>, dictionaryForm:String, transliteration:Tokenizer.Transliteration, POS:PartOfSpeech = .unknown){
+    init(base:String, reading:String, range:Range<String.Index>, dictionaryForm:String, transliteration:Tokenizer.Transliteration, POS:PartOfSpeech = .unknown, featureSlots:[String] = []){
         self.base=base
+        self.featureSlots=featureSlots
         self.range=range
         self.partOfSpeech = POS
         self.transliteration = transliteration
